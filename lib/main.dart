@@ -83,6 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    List<DateTime> dates = getDates();
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -121,13 +122,13 @@ class _MyHomePageState extends State<MyHomePage> {
               // axis because Columns are vertical (the cross axis would be
               // horizontal).
               children: <Widget>[
-                Day(day: getDate(1)),
-                Day(day: '${_dateTime.day}'),
-                Day(day: '${_dateTime.day}'),
-                Day(day: '${_dateTime.day}'),
-                Day(day: '${_dateTime.day}'),
-                Day(day: '${_dateTime.day}'),
-                Day(day: '${_dateTime.day}')
+                Day(day: '${dates[0].day}'),
+                Day(day: '${dates[1].day}'),
+                Day(day: '${dates[2].day}'),
+                Day(day: '${dates[3].day}'),
+                Day(day: '${dates[4].day}'),
+                Day(day: '${dates[5].day}'),
+                Day(day: '${dates[6].day}'),
               ],
             ),
           ],
@@ -141,16 +142,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  DateTime getDate(int week) {
+  List<DateTime> getDates() {
     DateTime start = DateTime(_dateTime.year, _dateTime.month);
     int dayOfWeek = start.weekday;
     if (dayOfWeek > DateTime.monday) {
       start = start.subtract(Duration(days: dayOfWeek - DateTime.monday));
     }
-    while (isMonthLess(start, _dateTime)) {
-
+    List<DateTime> dates = List();
+    dates.add(DateTime(start.year, start.month, start.day));
+    while (dates.length < 35) {
+      start = start.add(Duration(days: 1));
+      dates.add(DateTime(start.year, start.month, start.day));
     }
-    return currentMonth.add(Duration(days: dayOfMonth));
+    return dates;
   }
 
   bool isMonthLess(DateTime start, DateTime finish) {
