@@ -93,45 +93,12 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Table(
-          children: <TableRow>[
-            TableRow(
-              children: <Widget>[
-                Day(day: Intl.message('MON')),
-                Day(day: Intl.message('TUE')),
-                Day(day: Intl.message('WEB')),
-                Day(day: Intl.message('THU')),
-                Day(day: Intl.message('FRI')),
-                Day(day: Intl.message('SAT')),
-                Day(day: Intl.message('SUN'))
-              ],
-            ),
-            TableRow(
-              // Column is also layout widget. It takes a list of children and
-              // arranges them vertically. By default, it sizes itself to fit its
-              // children horizontally, and tries to be as tall as its parent.
-              //
-              // Invoke "debug painting" (press "p" in the console, choose the
-              // "Toggle Debug Paint" action from the Flutter Inspector in Android
-              // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-              // to see the wireframe for each widget.
-              //
-              // Column has various properties to control how it sizes itself and
-              // how it positions its children. Here we use mainAxisAlignment to
-              // center the children vertically; the main axis here is the vertical
-              // axis because Columns are vertical (the cross axis would be
-              // horizontal).
-              children: <Widget>[
-                Day(day: '${dates[0].day}'),
-                Day(day: '${dates[1].day}'),
-                Day(day: '${dates[2].day}'),
-                Day(day: '${dates[3].day}'),
-                Day(day: '${dates[4].day}'),
-                Day(day: '${dates[5].day}'),
-                Day(day: '${dates[6].day}'),
-              ],
-            ),
-          ],
+        child: ListView.builder(
+          padding: EdgeInsets.all(8.0),
+          itemExtent: 20.0,
+          itemBuilder: (BuildContext context, int index) {
+            return Text('entry $index');
+          },
         )
       ),
       floatingActionButton: FloatingActionButton(
@@ -142,6 +109,62 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Table buildCalendar(List<DateTime> dates) {
+    return Table(
+        children: <TableRow>[
+          buildTableHeader(),
+          buildTableRow(dates, 0),
+          buildTableRow(dates, 1),
+          buildTableRow(dates, 2),
+          buildTableRow(dates, 3),
+          buildTableRow(dates, 4),
+          buildTableRow(dates, 5),
+        ],
+      );
+  }
+
+  TableRow buildTableHeader() {
+    return TableRow(
+            children: <Widget>[
+              Day(day: Intl.message('MON')),
+              Day(day: Intl.message('TUE')),
+              Day(day: Intl.message('WEB')),
+              Day(day: Intl.message('THU')),
+              Day(day: Intl.message('FRI')),
+              Day(day: Intl.message('SAT')),
+              Day(day: Intl.message('SUN'))
+            ],
+          );
+  }
+
+  TableRow buildTableRow(List<DateTime> dates, int week) {
+    return TableRow(
+            // Column is also layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            children: <Widget>[
+              Day(day: '${dates[week * 7].day}'),
+              Day(day: '${dates[week * 7 + 1].day}'),
+              Day(day: '${dates[week * 7 + 2].day}'),
+              Day(day: '${dates[week * 7 + 3].day}'),
+              Day(day: '${dates[week * 7 + 4].day}'),
+              Day(day: '${dates[week * 7 + 5].day}'),
+              Day(day: '${dates[week * 7 + 6].day}'),
+            ],
+          );
+  }
+
   List<DateTime> getDates() {
     DateTime start = DateTime(_dateTime.year, _dateTime.month);
     int dayOfWeek = start.weekday;
@@ -150,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     List<DateTime> dates = List();
     dates.add(DateTime(start.year, start.month, start.day));
-    while (dates.length < 35) {
+    while (dates.length < 42) {
       start = start.add(Duration(days: 1));
       dates.add(DateTime(start.year, start.month, start.day));
     }
