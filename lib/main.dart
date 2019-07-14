@@ -89,20 +89,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onNextPage() {
-    var currentPage = pageController.page;
-    print("currentPage: " + pageController.page.toString());
-    print("page: " + page.toString());
-    var currentDelta = (page - currentPage).abs();
-    print("delta: " + currentDelta.toString());
+    final currentPage = pageController.page;
+    final currentDelta = (page - currentPage).abs();
     if (currentDelta < delta || 1 - currentDelta < delta) {
       page = currentPage.roundToDouble();
-      print("new page: " + page.toString());
-      switch(currentPage.round()) {
-        case 0: {_prevMonth();
-        pageController.jumpToPage(1);
-        break;
-        }
-        case 2: {_nextMonth(); pageController.jumpToPage(1); break;}
+      switch (currentPage.round()) {
+        case 0:
+          {
+            _prevMonth();
+            pageController.jumpToPage(1);
+            break;
+          }
+        case 2:
+          {
+            _nextMonth();
+            pageController.jumpToPage(1);
+            break;
+          }
       }
     }
   }
