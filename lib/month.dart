@@ -17,15 +17,37 @@ class Month extends StatelessWidget {
     List<DateTime> dates = getDates(year, month);
     return Column(
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            YearName(year: year),
-            MonthName(month: month)
-          ],
-        ),
+        YearMonthHeader(year: year, month: month),
         MonthDates(dates: dates)
       ],
+    );
+  }
+}
+
+class YearMonthHeader extends StatelessWidget {
+  const YearMonthHeader({
+    Key key,
+    @required this.year,
+    @required this.month,
+  }) : super(key: key);
+
+  final int year;
+  final int month;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(right: 16.0),
+            child: YearName(year: year),
+          ),
+          MonthName(month: month)
+        ],
+      ),
     );
   }
 }
@@ -38,58 +60,49 @@ class MonthDates extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-      defaultColumnWidth: IntrinsicColumnWidth(),
-      children: <TableRow>[
-        buildTableHeader(),
-        buildTableRow(dates, 0),
-        buildTableRow(dates, 1),
-        buildTableRow(dates, 2),
-        buildTableRow(dates, 3),
-        buildTableRow(dates, 4),
-        buildTableRow(dates, 5),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        double height = constraints.maxWidth/7.0;
+        return Table(
+          defaultColumnWidth: FractionColumnWidth(1.0/7.0),
+          children: <TableRow>[
+            buildTableHeader(height),
+            buildTableRow(dates, 0, height),
+            buildTableRow(dates, 1, height),
+            buildTableRow(dates, 2, height),
+            buildTableRow(dates, 3, height),
+            buildTableRow(dates, 4, height),
+            buildTableRow(dates, 5, height),
+          ],
+        );
+      },
+    );
+  }
+
+  TableRow buildTableHeader(double height) {
+    return TableRow(
+      children: <Widget>[
+        Day(day: Intl.message('MON'), height: height),
+        Day(day: Intl.message('TUE'), height: height),
+        Day(day: Intl.message('WEB'), height: height),
+        Day(day: Intl.message('THU'), height: height),
+        Day(day: Intl.message('FRI'), height: height),
+        Day(day: Intl.message('SAT'), height: height),
+        Day(day: Intl.message('SUN'), height: height)
       ],
     );
   }
 
-  TableRow buildTableHeader() {
+  TableRow buildTableRow(List<DateTime> dates, int week, double height) {
     return TableRow(
       children: <Widget>[
-        Day(day: Intl.message('MON')),
-        Day(day: Intl.message('TUE')),
-        Day(day: Intl.message('WEB')),
-        Day(day: Intl.message('THU')),
-        Day(day: Intl.message('FRI')),
-        Day(day: Intl.message('SAT')),
-        Day(day: Intl.message('SUN'))
-      ],
-    );
-  }
-
-  TableRow buildTableRow(List<DateTime> dates, int week) {
-    return TableRow(
-      // Column is also layout widget. It takes a list of children and
-      // arranges them vertically. By default, it sizes itself to fit its
-      // children horizontally, and tries to be as tall as its parent.
-      //
-      // Invoke "debug painting" (press "p" in the console, choose the
-      // "Toggle Debug Paint" action from the Flutter Inspector in Android
-      // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-      // to see the wireframe for each widget.
-      //
-      // Column has various properties to control how it sizes itself and
-      // how it positions its children. Here we use mainAxisAlignment to
-      // center the children vertically; the main axis here is the vertical
-      // axis because Columns are vertical (the cross axis would be
-      // horizontal).
-      children: <Widget>[
-        Day(day: '${dates[week * 7]?.day ?? ""}'),
-        Day(day: '${dates[week * 7 + 1]?.day ?? ""}'),
-        Day(day: '${dates[week * 7 + 2]?.day ?? ""}'),
-        Day(day: '${dates[week * 7 + 3]?.day ?? ""}'),
-        Day(day: '${dates[week * 7 + 4]?.day ?? ""}'),
-        Day(day: '${dates[week * 7 + 5]?.day ?? ""}'),
-        Day(day: '${dates[week * 7 + 6]?.day ?? ""}'),
+        Day(day: '${dates[week * 7]?.day ?? ""}', height: height),
+        Day(day: '${dates[week * 7 + 1]?.day ?? ""}', height: height),
+        Day(day: '${dates[week * 7 + 2]?.day ?? ""}', height: height),
+        Day(day: '${dates[week * 7 + 3]?.day ?? ""}', height: height),
+        Day(day: '${dates[week * 7 + 4]?.day ?? ""}', height: height),
+        Day(day: '${dates[week * 7 + 5]?.day ?? ""}', height: height),
+        Day(day: '${dates[week * 7 + 6]?.day ?? ""}', height: height),
       ],
     );
   }
