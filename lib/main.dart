@@ -1,4 +1,4 @@
-import 'package:driver_calendar/month.dart';
+import 'package:driver_calendar/calendar.dart';
 import 'package:driver_calendar/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -48,66 +48,16 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DateTime _dateTime = new DateTime.now();
-  final pageController = PageController(initialPage: 1);
-  double page = 1.0;
-  double delta = 0.001;
-
+  DateTime date = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    pageController.addListener(_onNextPage);
-  }
-
-  void _nextMonth() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _dateTime = addMonth(_dateTime);
-    });
-  }
-
-  void _prevMonth() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _dateTime = subtractMonth(_dateTime);
-    });
-  }
-
-  void _onNextPage() {
-    final currentPage = pageController.page;
-    final currentDelta = (page - currentPage).abs();
-    if (currentDelta < delta || 1 - currentDelta < delta) {
-      page = currentPage.roundToDouble();
-      switch (currentPage.round()) {
-        case 0:
-          {
-            _prevMonth();
-            pageController.jumpToPage(1);
-            break;
-          }
-        case 2:
-          {
-            _nextMonth();
-            pageController.jumpToPage(1);
-            break;
-          }
-      }
-    }
   }
 
   @override
@@ -118,8 +68,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    final prevDate = subtractMonth(_dateTime);
-    final nextDate = addMonth(_dateTime);
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -130,18 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Card(
-          child: PageView(
-            controller: pageController,
-            children: <Widget>[
-              Month(year: prevDate.year, month: prevDate.month),
-              Month(year: _dateTime.year, month: _dateTime.month),
-              Month(year: nextDate.year, month: nextDate.month)
-            ],
-          )
+          child: Calendar(currentDate: date)
         )
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _nextMonth,
+        onPressed: (){
+          setState(() {
+            date = addMonth(date);
+          });
+        },
         tooltip: 'Increment',
         child: Icon(Icons.message),
       ), // This trailing comma makes auto-formatting nicer for build methods.
